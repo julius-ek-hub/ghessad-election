@@ -16,12 +16,20 @@ export default function MyApp(props) {
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <meta name="og:description" content="GHESSAD 2024 Executive Election" />
+        <meta name="description" content="GHESSAD 2024 Executive Election" />
         <title>GHESSAD 2024 Executive Election</title>
         <meta
           name="og:title"
           content="GHESSAD 2024 Executive Election, Experience a new regime"
         />
-        <meta name="image" content="/gessad-logo.jpeg" />
+        <meta
+          name="image"
+          content="https://ghessad-election.vercel.app/gessad-logo.jpeg"
+        />
+        <meta
+          name="og:image"
+          content="https://ghessad-election.vercel.app/gessad-logo.jpeg"
+        />
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
