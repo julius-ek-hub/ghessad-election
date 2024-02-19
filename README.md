@@ -1,0 +1,1 @@
+Download -> https://download-directory.github.io/?url=https://github.com/julius-ek-hub/templates/tree/main/nextjs
