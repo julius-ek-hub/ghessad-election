@@ -1,32 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import Link from 'next/link';
+import Link from "next/link";
 
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { alpha } from '@mui/material/styles';
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { alpha } from "@mui/material/styles";
 
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import TextField from '@mui/material/TextField';
-import Loading from '../src/Loading';
-import Header from '../src/Header';
-import { Divider, IconButton, Typography } from '@mui/material';
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import TextField from "@mui/material/TextField";
+import Loading from "../src/Loading";
+import Header from "../src/Header";
+import { Divider, IconButton, Typography } from "@mui/material";
 
 const H = ({ info }) => (
   <Header info={info}>
     <Link href="/register_voter">
       <Button
         endIcon={<ArrowForwardIosIcon />}
-        sx={{ position: 'absolute', top: 2, right: 2 }}
+        sx={{ position: "absolute", top: 2, right: 2 }}
       >
         Add Voter
       </Button>
@@ -38,16 +38,16 @@ export default function About() {
   const [positions, setPositions] = useState([]);
   const [voters, setVoters] = useState(0);
   const [info, setInfo] = useState({});
-  const [loading, setLoading] = useState('Loading...');
+  const [loading, setLoading] = useState("Loading...");
   const [voter_id, setVoteID] = useState(null);
   const [voted, setVoted] = useState(false);
   const [error, setError] = useState(null);
-  const [vote_id_tmp, setVoteIDTmp] = useState('');
+  const [vote_id_tmp, setVoteIDTmp] = useState("");
   const [showMessage, setShowMessage] = useState(true);
   const getPositions = async () => {
     try {
-      setLoading('Fetching positions...');
-      const resp = await fetch('/api/positions');
+      setLoading("Fetching positions...");
+      const resp = await fetch("/api/positions");
       const js = await resp.json();
 
       setPositions(js);
@@ -59,7 +59,7 @@ export default function About() {
 
   const verifyID = async (id) => {
     try {
-      setLoading('Verifying existing member...');
+      setLoading("Verifying existing member...");
       const resp = await fetch(`/api/voters?id=${id}`);
       const js = await resp.json();
       return js.voter;
@@ -70,17 +70,18 @@ export default function About() {
   };
 
   const getUser = async () => {
-    const id = localStorage.getItem('gessad_vote_id');
+    const id = localStorage.getItem("gessad_vote_id");
     if (!id) return null;
     const vf = await verifyID(id);
     if (vf) {
       setVoted(vf.voted);
+      vf.admin && localStorage.setItem("gessad_admin", "true");
       setVoteID(id);
       getPositions();
     }
   };
   const getVoters = async () => {
-    setLoading('Fetching voters...');
+    setLoading("Fetching voters...");
     try {
       const resp = await fetch(`/api/voters`);
       const js = await resp.json();
@@ -94,17 +95,17 @@ export default function About() {
   const handleCheck = async (pk, candidate_index, voted) => {
     if (Date.now() < new Date(info.start).getTime())
       return alert(
-        'Election will start on ' + new Date(info.start).toDateString()
+        "Election will start on " + new Date(info.start).toDateString()
       );
     if (Date.now() > new Date(info.end).getTime())
-      return alert('Election ended on ' + new Date(info.end).toDateString());
+      return alert("Election ended on " + new Date(info.end).toDateString());
     try {
       const pos = [...positions];
       setLoading(
         `Voting for ${pos[pk].candidates[candidate_index].name} for ${pos[pk].name}`
       );
-      const resp = await fetch('/api/positions?type=vote', {
-        method: 'post',
+      const resp = await fetch("/api/positions?type=vote", {
+        method: "post",
         body: JSON.stringify({
           _id: pos[pk]._id,
           candidate_index,
@@ -127,7 +128,7 @@ export default function About() {
   const getInfo = async () => {
     try {
       setLoading(`fetching Election Info...`);
-      const resp = await fetch('/api/info');
+      const resp = await fetch("/api/info");
       const js = await resp.json();
 
       if (!js.error) {
@@ -151,7 +152,8 @@ export default function About() {
     if (!vf) return setError(`Voter's ID ${vote_id_tmp} does not exists`);
     setVoteID(vote_id_tmp);
     setVoted(vf.voted);
-    localStorage.setItem('gessad_vote_id', vote_id_tmp);
+    vf.admin && localStorage.setItem("gessad_admin", "true");
+    localStorage.setItem("gessad_vote_id", vote_id_tmp);
     getPositions();
   };
 
@@ -160,8 +162,8 @@ export default function About() {
       <Container
         maxWidth="sm"
         sx={{
-          height: '100vh',
-          flexDirection: 'column',
+          height: "100vh",
+          flexDirection: "column",
           gap: 3,
           p: 0,
         }}
@@ -205,15 +207,15 @@ export default function About() {
         </Typography>
         <Box px={4} my={2} position="relative">
           {showMessage &&
-            (info.message || '').split('\n').map((m, i) => (
+            (info.message || "").split("\n").map((m, i) => (
               <Typography color="text.secondary" key={i} mt={1}>
                 {m}
               </Typography>
             ))}
           <IconButton
-            title={showMessage ? 'Hide message.' : 'Show message'}
+            title={showMessage ? "Hide message." : "Show message"}
             onClick={() => setShowMessage(!showMessage)}
-            sx={{ position: 'absolute', top: 0, right: 6 }}
+            sx={{ position: "absolute", top: 0, right: 6 }}
             size="small"
           >
             {showMessage ? <VisibilityOff /> : <Visibility />}
@@ -241,8 +243,8 @@ export default function About() {
               <FormLabel
                 sx={{
                   fontSize: 20,
-                  color: 'text.primary',
-                  fontWeight: 'bold',
+                  color: "text.primary",
+                  fontWeight: "bold",
                   mb: 1,
                 }}
               >
@@ -270,11 +272,11 @@ export default function About() {
                         borderRadius={2}
                         {...(active && {
                           border: (t) => `1px solid ${t.palette.divider}`,
-                          bgcolor: 'rgba(0,0,0,0.01)',
+                          bgcolor: "rgba(0,0,0,0.01)",
                         })}
                       >
                         <FormControlLabel
-                          sx={{ width: '100%' }}
+                          sx={{ width: "100%" }}
                           control={
                             <Radio
                               checked={active}
@@ -297,7 +299,7 @@ export default function About() {
                           left={0}
                           bottom={0}
                           top={0}
-                          sx={{ cursor: 'pointer', transition: '300ms width' }}
+                          sx={{ cursor: "pointer", transition: "300ms width" }}
                           borderRadius="inherit"
                           onClick={(e) =>
                             e.currentTarget.previousElementSibling.click()
@@ -314,7 +316,7 @@ export default function About() {
                           top={0}
                           right={0}
                           fontSize="small"
-                          sx={{ cursor: 'pointer', transition: '300ms width' }}
+                          sx={{ cursor: "pointer", transition: "300ms width" }}
                           borderRadius="inherit"
                           onClick={(e) =>
                             e.currentTarget.previousElementSibling.click()

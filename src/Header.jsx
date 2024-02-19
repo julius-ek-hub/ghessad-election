@@ -1,19 +1,19 @@
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import { useEffect, useState } from 'react';
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import { useEffect, useState } from "react";
 
 export default function Header({ children, info }) {
   const [is_admin, setIsAdmin] = useState(false);
   useEffect(() => {
-    setIsAdmin(localStorage.getItem('gessad_vote_id') === '0000');
+    setIsAdmin(Boolean(localStorage.getItem("gessad_admin")));
   }, [info]);
 
   const goodDate = (d) => {
     const n = new Date(d);
 
-    return `${n.toDateString().split(' ').slice(1, 3).join(' ')}, ${
-      d.split('T')[1]
+    return `${n.toDateString().split(" ").slice(1, 3).join(" ")}, ${
+      d.split("T")[1]
     }`;
   };
   return (

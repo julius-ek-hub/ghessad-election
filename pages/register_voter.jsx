@@ -39,8 +39,8 @@ export default function About() {
   };
 
   useEffect(() => {
-    const id = localStorage.getItem("gessad_vote_id");
-    if (id !== "0000") r.replace("/");
+    const admin = localStorage.getItem("gessad_admin");
+    if (!admin) r.replace("/");
   }, []);
 
   return (
